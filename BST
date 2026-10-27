@@ -1,0 +1,132 @@
+/*Implement various operations on a Binary Search Tree, such as insertion, deletion, display,
+and search.*/
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node structure
+struct node {
+    int data;
+    struct node* left;
+    struct node* right;
+};
+
+// Root of BST
+struct node* root = NULL;
+
+// Function to create a new node
+struct node* newNode(int value) {
+    struct node* temp = (struct node*)malloc(sizeof(struct node));
+    temp->data = value;
+    temp->left = temp->right = NULL;
+    return temp;
+}
+
+// Insert node into BST (value > root → left side, otherwise right side)
+void insert(int value) {
+    struct node* curr = newNode(value);
+
+    if (root == NULL) {
+        root = curr;
+        printf("%d inserted as root.\n", value);
+        return;
+    }
+
+    struct node* temp = root;
+    struct node* parent = NULL;
+
+    while (temp != NULL) {
+        parent = temp;
+        if (value < temp->data)
+            temp = temp->left;
+        else
+            temp = temp->right;
+    }
+
+    if (value < parent->data)
+        parent->left = curr;
+    else
+        parent->right = curr;
+
+    printf("%d inserted successfully.\n", value);
+}
+
+// Create multiple nodes
+void create() {
+    int n, val;
+    printf("How many nodes to create? ");
+    scanf("%d", &n);
+
+    for (int i = 0; i < n; i++) {
+        printf("Enter value to insert: ");
+        scanf("%d", &val);
+        insert(val);
+    }
+}
+
+// Inorder traversal
+void inorder(struct node* root) {
+    if (root != NULL) {
+        inorder(root->left);
+        printf("%d ", root->data);
+        inorder(root->right);
+    }
+}
+
+// Search for a value (according to reversed logic)
+void search(int key) {
+    struct node* temp = root;
+
+    while (temp != NULL) {
+        if (temp->data == key) {
+            printf("%d found in the tree.\n", key);
+            return;
+        } else if (key < temp->data) {
+            temp = temp->left;
+        } else {
+            temp = temp->right;
+        }
+    }
+    printf("%d not found in the tree.\n", key);
+}
+
+// Main program
+int main() {
+    int choice, key, val;
+
+    do {
+        printf("\n--- BST Operations ---\n");
+        printf("1. Create\n2. Insert\n3. Display (Inorder)\n4. Search\n5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+        case 1:
+            create();
+            break;
+        case 2:
+            printf("Enter value to insert: ");
+            scanf("%d", &val);
+            insert(val);
+            break;
+        case 3:
+            printf("Inorder traversal: ");
+            inorder(root);
+            printf("\n");
+            break;
+        case 4:
+            printf("Enter value to search: ");
+            scanf("%d", &key);
+            search(key);
+            break;
+        case 5:
+            printf("Exiting program.\n");
+            break;
+        default:
+            printf("Invalid choice! Try again.\n");
+        }
+    } while (choice != 5);
+
+    return 0;
+}
