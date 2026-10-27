@@ -1,0 +1,90 @@
+The problem is to design and implement a hash table of fixed size using the division method for the hash function. In case of collisions, the resolution technique used is linear probing. The system should support the following operations:
+
+#include <stdio.h>
+
+#define SIZE 10
+#define EMPTY -1
+
+int hashTable[SIZE];
+
+// Simple hash function
+int hashFunction(int key) {
+    return key % SIZE;
+}
+
+// Insert key
+void insert(int key) {
+    int index = hashFunction(key);
+
+    // Find empty place
+    while (hashTable[index] != EMPTY) {
+        index = (index + 1) % SIZE;
+    }
+
+    hashTable[index] = key;
+    printf("Key %d inserted at index %d\n", key, index);
+}
+
+// Search key
+void search(int key) {
+    int index = hashFunction(key);
+    int count = 0;
+
+    while (count < SIZE) {
+        if (hashTable[index] == key) {
+            printf("Key %d found at index %d\n", key, index);
+            return;
+        }
+        if (hashTable[index] == EMPTY) {
+            break;
+        }
+        index = (index + 1) % SIZE;
+        count++;
+    }
+
+    printf("Key %d not found\n", key);
+}
+
+// Display hash table
+void display() {
+    printf("\nHash Table:\n");
+    for (int i = 0; i < SIZE; i++) {
+        if (hashTable[i] == EMPTY)
+            printf("[%d] : EMPTY\n", i);
+        else
+            printf("[%d] : %d\n", i, hashTable[i]);
+    }
+}
+
+int main() {
+    // Initialize table with EMPTY
+    for (int i = 0; i < SIZE; i++)
+        hashTable[i] = EMPTY;
+
+    int choice, key;
+
+    while (1) {
+        printf("\n1. Insert\n2. Search\n3. Display\n4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        if (choice == 1) {
+            printf("Enter key to insert: ");
+            scanf("%d", &key);
+            insert(key);
+        } else if (choice == 2) {
+            printf("Enter key to search: ");
+            scanf("%d", &key);
+            search(key);
+        } else if (choice == 3) {
+            display();
+        } else if (choice == 4) {
+            printf("Exiting program.\n");
+            break;
+        } else {
+            printf("Invalid choice. Try again.\n");
+        }
+    }
+
+    return 0;
+}
