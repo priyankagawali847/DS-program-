@@ -1,0 +1,110 @@
+/*The task is to implement a real-time Undo/Redo system for a text editing application using the Stack data structure.*/
+#include <stdio.h>
+#include <string.h>
+
+#define SIZE 100             // Maximum length of one text
+#define MAX 50               // Maximum number of changes stored in Undo or Redo stack 
+
+char undoStack[MAX][SIZE];       //variable
+char redoStack[MAX][SIZE];       //variable
+int undoTop = -1;               //Index of the top of each stack.
+int redoTop = -1;
+
+char currentText[SIZE] = "";
+
+// Push to Undo stack
+void pushUndo(char text[]) {
+    if (undoTop < MAX - 1) {
+        undoTop++;
+        strcpy(undoStack[undoTop], text);
+    }
+}
+
+// Push to Redo stack
+void pushRedo(char text[]) {
+    if (redoTop < MAX - 1) {
+        redoTop++;
+        strcpy(redoStack[redoTop], text);
+    }
+}
+
+// Pop from Undo stack
+void popUndo(char text[]) {
+    if (undoTop >= 0) {
+        strcpy(text, undoStack[undoTop]);
+        undoTop--;
+    }
+}
+
+// Pop from Redo stack
+void popRedo(char text[]) {
+    if (redoTop >= 0) {
+        strcpy(text, redoStack[redoTop]);
+        redoTop--;
+    }
+}
+
+// Check if stack is empty
+int isUndoEmpty() {
+    return (undoTop == -1);
+}
+
+int isRedoEmpty() {
+    return (redoTop == -1);
+}
+
+// Display current text
+void display() {
+    printf("\nCurrent Document: \"%s\"\n", currentText);
+}
+
+int main() {
+    int choice;
+    char temp[SIZE];
+
+    while (1) {
+        printf("\n--- Text Editor ---\n");
+        printf("1. Make a Change\n");
+        printf("2. Undo\n");
+        printf("3. Redo\n");
+        printf("4. Show Document\n");
+        printf("5. Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+        getchar(); // remove newline from input buffer
+
+        if (choice == 1) {
+            pushUndo(currentText); // save current text to undo stack
+            printf("Enter new text: ");
+            fgets(currentText, SIZE, stdin);
+            currentText[strcspn(currentText, "\n")] = '\0'; // remove newline (string complement span:)
+            redoTop = -1; // clear redo stack
+
+        } else if (choice == 2) {
+            if (!isUndoEmpty()) {
+                pushRedo(currentText);
+                popUndo(currentText);
+            } else {
+                printf("Nothing to undo!\n");
+            }
+
+        } else if (choice == 3) {
+            if (!isRedoEmpty()) {
+                pushUndo(currentText);
+                popRedo(currentText);
+            } else {
+                printf("Nothing to redo!\n");
+            }
+
+        } else if (choice == 4) {
+            display();
+
+        } else if (choice == 5) {
+            break;
+
+        } else {
+            printf("Invalid choice!\n");
+        }
+    }
+    return 0;
+}
