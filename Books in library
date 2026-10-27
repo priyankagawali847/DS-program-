@@ -1,0 +1,125 @@
+/* Write a Python program to manage the borrowing records of books in a library. Implement
+the following functionalities: 
+• Compute the average number of books borrowed by all library members.
+• Find the book with the highest and lowest number of borrowings in the library.
+• Count the number of members who have not borrowed any books (denoted by a
+borrow count of 0).
+• Display the most frequently borrowed book (i.e., the mode of borrow counts).
+After performing, determine the time and Space complexity of each operation   */
+
+
+def get_user_input():
+    members = {}
+    n = int(input("Enter the number of library members: "))
+    for i in range(n):
+        name = input("\nEnter member name: ")
+        num_books = int(input("How many books has %s borrowed? " % name))
+        books = []
+        for i in range(num_books):
+           book = input("Enter name of book %d" % (i + 1))
+           books.append(book)
+        members[name] = books
+    return members
+
+def compute_average_borrowed(members):
+    total_books = 0
+    for books in members.values():
+        total_books += len(books)
+    average = total_books / len(members) if members else 0
+    return average
+
+def find_highest_lowest_borrowed(members):
+    borrow_counts = {}
+    for books in members.values():
+        for book in books:
+            if book in borrow_counts:
+                borrow_counts[book] += 1
+            else:
+                borrow_counts[book] = 1
+
+    if not borrow_counts:
+        return None, None
+
+    max_count = max(borrow_counts.values())
+    min_count = min(borrow_counts.values())
+
+    max_book = ""
+    min_book = ""
+
+    for book in borrow_counts:
+        if borrow_counts[book] == max_count:
+            max_book = book
+            break
+    for book in borrow_counts:
+        if borrow_counts[book] == min_count:
+            min_book = book
+            break
+
+    return max_book, min_book
+
+def count_zero_borrowers(members):
+    count = 0
+    for books in members.values():
+        if len(books) == 0:
+            count += 1
+    return count
+
+def most_frequent_borrowed_book(members):
+    borrow_counts = {}
+    for books in members.values():
+        for book in books:
+            if book in borrow_counts:
+                borrow_counts[book] += 1
+            else:
+                borrow_counts[book] = 1
+
+    if not borrow_counts:
+        return None
+
+    max_count = max(borrow_counts.values())
+    modes = []
+
+    for book in borrow_counts:
+        if borrow_counts[book] == max_count:
+            modes.append(book)
+
+    return modes
+
+# -------- Main Program --------
+members = get_user_input()
+
+avg = compute_average_borrowed(members)
+print("Average number of books borrowed per member: " + str(round(avg, 2)))
+
+max_book, min_book = find_highest_lowest_borrowed(members)
+if max_book and min_book:
+    print("Most borrowed book: " + max_book)
+    print("Least borrowed book: " + min_book)
+else:
+    print("No books were borrowed by any member.")
+
+zero_borrowers = count_zero_borrowers(members)
+print("Members who borrowed no books: " + str(zero_borrowers))
+
+modes = most_frequent_borrowed_book(members)
+if modes:
+    print("Most frequently borrowed book(s):", modes)
+else:
+    print("No borrowing records found.")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
