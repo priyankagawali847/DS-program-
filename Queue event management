@@ -1,0 +1,117 @@
+/*Implement a real-time event processing system using a Queue data structure. The system
+should support the following features:
+• Add an Event: When a new event occurs, it should be added to the event queue.
+• Process the Next Event: The system should process and remove the event that has
+been in the queue the longest.
+• Display Pending Events: Show all the events currently waiting to be processed.
+• Cancel an Event: An event can be canceled if it has not been processed.*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX 100
+
+char queue[MAX][50];  // store event names
+int front = 0;
+int rear = -1;
+
+// Add Event
+void addEvent(char event[]) {
+    if (rear >= MAX - 1) {
+        printf("\nEvent Queue is full!");
+    } else {
+        rear++;
+        strcpy(queue[rear], event);
+        printf("\nEvent Added: %s", event);
+    }
+}
+
+// Process Next Event
+void processEvent() {
+    if (front > rear) {
+        printf("\nNo events to process!");
+    } else {
+        printf("\nProcessing Event: %s", queue[front]);
+        front++;
+    }
+}
+
+// Display Events (only names)
+void displayEvents() {
+    if (front > rear) {
+        printf("\nNo events.");
+    } else {
+        printf("\n");
+        for (int i = front; i <= rear; i++) {
+            printf("%s ", queue[i]);
+        }
+    }
+}
+
+// Cancel Event
+void cancelEvent(char event[]) {
+    if (front > rear) {
+        printf("\nNo events to cancel!");
+        return;
+    }
+
+    int pos = -1;
+    for (int i = front; i <= rear; i++) {
+        if (strcmp(queue[i], event) == 0) {
+            pos = i;
+            break;
+        }
+    }
+
+    if (pos == -1) {
+        printf("\nEvent not found or already processed.");
+    } else {
+        for (int i = pos; i < rear; i++) {
+            strcpy(queue[i], queue[i + 1]);  // shift left
+        }
+        rear--;
+        printf("\nCanceled Event: %s", event);
+    }
+}
+
+int main() {
+    int choice;
+    char event[50];
+
+    do {
+        
+        printf("\n1. Add Event");
+        printf("\n2. Process Next Event");
+        printf("\n3. Display Events");
+        printf("\n4. Cancel Event");
+        printf("\n5. Exit");
+        printf("\nEnter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+        case 1:
+            printf("Enter Event Name: ");
+            scanf("%s", event);
+            addEvent(event);
+            break;
+        case 2:
+            processEvent();
+            break;
+        case 3:
+            displayEvents();
+            break;
+        case 4:
+            printf("Enter Event Name to Cancel: ");
+            scanf("%s", event);
+            cancelEvent(event);
+            break;
+        case 5:
+            exit(0);
+        default:
+            printf("\nInvalid choice!");
+        }
+    } while (choice != 5);
+
+    return 0;
+}
