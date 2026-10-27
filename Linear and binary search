@@ -1,0 +1,95 @@
+A = []
+def accept_array(A): 
+   n = int(input("Enter the total no. of student : "))
+   for i in range(n):
+      x = int(input("Enter the  roll no of student  :"))
+      A.append(x)
+   print("Student Info accepted successfully\n\n")
+   return n
+
+def display_array(A,n): 
+   if(n == 0) :
+      print("\nNo records in the database")
+   else :
+      print("Students  Array : ",end=' ')
+      for i in range(n) :
+         print(A[i],end=' ')
+      print("\n");
+      
+def Linear_Search(A,n,x):
+    for i in range(n):
+        if(A[i]==x):
+            return i
+    return -1
+      
+
+
+  
+ 
+print ("\t1 : Accept & Display Students info ")     
+n = accept_array(A)
+display_array(A,n)
+X = int(input("Enter the roll_no to be searched : "))
+Ls = Linear_Search(A,n,X)
+if(Ls == -1) :
+      print("\tRoll no to be Searched not Found\n")
+else:
+      print("\tRoll no found at location %d" %(Ls + 1))
+
+
+A = []
+def accept_array(A): 
+   n = int(input("Enter the total no. of student : "))
+   for i in range(n):
+      x = int(input("Enter the  roll no of student %d : "%(i+1)))
+      A.append(x)
+   print("Student Info accepted successfully\n\n")
+   return n
+
+
+def display_array(A,n): 
+   if(n == 0) :
+      print("\nNo records in the database")
+   else :
+      print("Students  Array : ",end=' ')
+      for i in range(n) :
+         print("%d  "%A[i],end=' ')
+      print("\n");
+
+
+
+
+def binary_search(A, low, high, x):
+ 
+    if high >= low:
+        mid = (high + low) // 2
+         # If element is present at the middle itself
+        if A[mid] == x:
+            return mid
+         
+        elif A[mid] > x:
+            return binary_search(A, low, mid - 1, x)
+        else:
+            return binary_search(A, mid + 1, high, x)
+ 
+    else:
+        # Element is not present in the array
+        return -1
+
+print ("\t1 :Accept & Display Students info ")      
+
+n = accept_array(A)
+display_array(A,n)
+      
+     
+X = int(input("Enter the roll_no to be searched : "))
+Bs  = binary_search(A, 0, len(A)-1, X)
+if(Bs == -1) : 
+    print("\tRoll no to be Searched not Found\n")
+else :
+    print("\tRoll no found at location %d"%(Bs+ 1))            
+     
+           
+
+
+
