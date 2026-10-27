@@ -1,0 +1,110 @@
+A pizza shop receives multiple orders from several locations. Assume that 
+one pizza boy is tasked with delivering pizzas in nearby locations,
+ which is represented using a graph. 
+The time required to reach from one location to another represents node connections. Solve the problem of delivering a pizza to all customers in the minimum time.
+ Use appropriate data structures.
+
+#include <stdio.h>
+
+#define MAX 20
+#define INF 999 //INF is used specifically to mark no edge exists between two nodes.
+
+int a[MAX][MAX], visited[MAX], v;
+
+// Function to take input
+void input() {
+    int i, j, e, l, u, w;
+
+    printf("Enter the number of branches: ");
+    scanf("%d", &v);
+
+    // Initialize adjacency matrix and visited array
+    for(i = 0; i < v; i++) {
+        visited[i] = 0;
+        for(j = 0; j < v; j++)
+            a[i][j] = INF;  //initially, assume no connection between any branches
+    }
+
+    printf("Enter the number of connections: ");
+    scanf("%d", &e);
+
+    for(i = 0; i < e; i++) {
+        printf("Enter the end branches of connection: ");
+        scanf("%d %d", &l, &u);
+        printf("Enter the time of delivering a pizza: ");
+        scanf("%d", &w);
+        a[l-1][u-1] = a[u-1][l-1] = w;   //if the user enters branches 1 and 2, we must convert them to indices 0 and 1 for the array.
+    }
+}
+
+// Function to display adjacency matrix
+void display() {
+    int i, j;
+    printf("\nAdjacency Matrix:\n");
+    for(i = 0; i < v; i++) {
+        for(j = 0; j < v; j++)
+            printf("%d ", a[i][j]);
+        printf("\n");
+    }
+}
+
+// Function to find minimum cost using Prim's Algorithm
+void minimum() {
+    int count, i, j, min, p = 0, q = 0;
+    int total = 0;
+
+    visited[0] = 1; // Start from first branch
+
+    printf("\nMinimum cost connections:\n");
+
+    for(count = 0; count < v - 1; count++) {
+        min = INF;
+        for(i = 0; i < v; i++) {
+            if(visited[i]) {
+                for(j = 0; j < v; j++) {
+                    if(!visited[j] && a[i][j] < min) {
+                        min = a[i][j];  //stores the smallest cost edge found
+                        p = i; //store the endpoints (branches) of that smallest edge.
+                        q = j;
+                    }
+                }
+            }
+        }
+        visited[q] = 1;        // Mark newly included branch
+        total += min;        //Add the weight (cost) of the newly selected edge to the total minimum cost
+        printf("%d -> %d  |  Cost = %d\n", p+1, q+1, min);
+    }
+
+    printf("\nMinimum total cost to connect all branches: %d\n", total);
+}
+
+int main() {
+    int ch;
+
+    do {
+        printf("\n========== PRIM'S ALGORITHM =============\n");
+        printf("1. Input\n2. Display\n3. Minimum\n4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &ch);
+
+        switch(ch) {
+            case 1:
+                input();
+                break;
+            case 2:
+                display();
+                break;
+            case 3:
+                minimum();
+                break;
+            case 4:
+                printf("Exiting program.\n");
+                break;
+            default:
+                printf("Invalid choice! Try again.\n");
+        }
+
+    } while(ch != 4);
+
+    return 0;
+}
