@@ -1,0 +1,127 @@
+/*The problem is to design and implement a hash table of size 10 using the division method as the hash function.
+ In case of a collision, we use chaining (linked lists). The system should support the following operations:*/
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define SIZE 10   // Hash table size
+
+// Node structure for chaining
+struct Node {
+    int value;
+    struct Node* next;
+};
+
+struct Node* hashTable[SIZE];  // Hash table (array of pointers)
+
+// Hash function (division method)
+int hashFunction(int value) {
+    return value % SIZE;
+}
+
+// Insert operation (at the end of chain)
+void insert(int value) {
+    int index = hashFunction(value);
+
+    // Check if value already exists
+    struct Node* temp = hashTable[index];
+    while (temp != NULL) {
+        if (temp->value == value) {
+            printf("Value %d already exists in the table.\n", value);
+            return;
+        }
+        temp = temp->next;
+    }
+
+    // Create new node
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->value = value;
+    newNode->next = NULL;
+
+    // If chain is empty, insert as first node
+    if (hashTable[index] == NULL) {
+        hashTable[index] = newNode;
+    } else {
+        // Traverse to the end of the chain
+        temp = hashTable[index];
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+    }
+
+    printf("Inserted %d at index %d\n", value, index);
+}
+
+// Search operation
+void search(int value) {
+    int index = hashFunction(value);
+    struct Node* temp = hashTable[index];
+
+    while (temp != NULL) {
+        if (temp->value == value) {
+            printf("Found value %d in the table.\n", value);
+            return;
+        }
+        temp = temp->next;
+    }
+    printf("Value %d not found!\n", value);
+}
+
+
+
+// Display hash table
+void display() {
+    printf("\nHash Table:\n");
+    for (int i = 0; i < SIZE; i++) {
+        printf("[%d] -> ", i);
+        struct Node* temp = hashTable[i];
+        while (temp != NULL) {
+            printf("%d -> ", temp->value);
+            temp = temp->next;
+        }
+        printf("NULL\n");
+    }
+}
+
+int main() {
+    // Initialize hash table
+    for (int i = 0; i < SIZE; i++)
+        hashTable[i] = NULL;
+
+    int choice, value;
+
+    while (1) {
+        printf("\n--- Hash Table Menu ---\n");
+        printf("1. Insert\n2. Search\n3. Display\n 4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter value to insert: ");
+                scanf("%d", &value);
+                insert(value);
+                break;
+
+            case 2:
+                printf("Enter value to search: ");
+                scanf("%d", &value);
+                search(value);
+                break;
+
+            case 3:
+                display();
+                break;
+
+            case 4:
+                printf("Exiting program.\n");
+                exit(0);
+
+            default:
+                printf("Invalid choice! Try again.\n");
+        }
+    }
+
+    return 0;
+}
